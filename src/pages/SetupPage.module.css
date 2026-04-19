@@ -1,0 +1,314 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 230px;
+  min-width: 230px;
+  background: #2c2420;
+  color: #f0e6d6;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 24px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid #4a3c34;
+  color: #d4af8a;
+  font-weight: 600;
+}
+
+.navBtn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #c4b09a;
+  padding: 10px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.navBtn:hover { background: #3d2f27; color: #f0e6d6; }
+.navBtn.active { background: #5c3d2e; color: #f0e6d6; font-weight: 700; }
+
+.sideActions {
+  margin-top: auto;
+  padding: 16px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.updateBtn {
+  background: #d4af8a;
+  color: #2c2420;
+  border: none;
+  border-radius: 6px;
+  padding: 11px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  letter-spacing: 0.3px;
+}
+.updateBtn:hover { background: #c49a6c; }
+
+.demoBtn {
+  background: #d4af8a;
+  color: #2c2420;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.demoBtn:hover { background: #c49a6c; }
+
+.previewBtn {
+  background: #5c3d2e;
+  color: #f0e6d6;
+  border: 1px solid #7a5240;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.previewBtn:hover { background: #7a5240; }
+
+.copyBtn {
+  background: none;
+  color: #a08060;
+  border: 1px dashed #7a5240;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.copyBtn:hover { color: #d4af8a; }
+
+/* ── Main ── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #faf9f7;
+  overflow-y: auto;
+}
+
+.header {
+  background: #fff;
+  border-bottom: 1px solid #ece8e2;
+  padding: 20px 36px;
+}
+
+.header h1 {
+  font-size: 22px;
+  color: #2c2420;
+  margin: 0;
+}
+
+.content {
+  padding: 32px 36px;
+  max-width: 720px;
+}
+
+/* form fields */
+.content input[type='text'],
+.content input[type='date'],
+.content input[type='time'],
+.content textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.content input:focus,
+.content textarea:focus { border-color: #d4af8a; }
+.content textarea { resize: vertical; }
+
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+}
+.row > * { flex: 1; }
+
+.hint { font-size: 13px; color: #888; }
+
+/* ── Cover Preview Panel ── */
+.previewPanel {
+  width: 460px;
+  min-width: 460px;
+  background: #1a1009;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 14px 14px 16px;
+  border-left: 1px solid #3d2f27;
+}
+
+.previewTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  color: #d4af8a;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.previewHint {
+  font-size: 11px;
+  color: #a08060;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* Wrapper just centres the cover horizontally when max-width kicks in */
+.previewCoverWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.previewCover {
+  position: relative;
+  /* Width drives everything: fill available space up to max derived from viewport height */
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  /* If viewport is short, cap height and shrink width proportionally */
+  max-height: calc(100vh - 120px);
+  max-width: calc((100vh - 120px) * 9 / 16);
+  background: #2c2420;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: crosshair;
+  flex-shrink: 0;
+}
+
+.previewCoverImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.previewPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4af8a;
+  font-size: 13px;
+  font-family: 'Playfair Display', serif;
+  pointer-events: none;
+}
+
+/* Guest name drag handle — styled via inline style for live preview */
+.previewGuestName {
+  position: absolute;
+  transform: translateX(-50%);
+  cursor: grab;
+  white-space: nowrap;
+  user-select: none;
+  outline: 1px dashed rgba(255,255,255,0.55);
+  outline-offset: 3px;
+  border-radius: 2px;
+  z-index: 2;
+}
+.previewGuestName:active { cursor: grabbing; }
+
+/* OPEN button drag handle — styled via inline style for live preview */
+.previewOpenBtn {
+  position: absolute;
+  transform: translateX(-50%);
+  cursor: grab;
+  user-select: none;
+  outline: 1px dashed rgba(255,255,255,0.5);
+  outline-offset: 4px;
+  border: 2px solid rgba(255,255,255,0.6);
+  padding: 5px 14px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(4px);
+  z-index: 2;
+  white-space: nowrap;
+  letter-spacing: 3px;
+}
+.previewOpenBtn:active { cursor: grabbing; }
+
+.previewCoords {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+.previewCoords span {
+  font-size: 10px;
+  color: #6a5040;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* MP3 upload */
+.audioPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.audioPlayer {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.removeAudioBtn {
+  background: none;
+  border: 1px solid #e57373;
+  color: #e57373;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.removeAudioBtn:hover { background: #fff5f5; }
+
+.fileInput {
+  font-size: 13px;
+  color: #555;
+}
+
+.imagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}

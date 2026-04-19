@@ -1,0 +1,154 @@
+.section {
+  padding: 56px 24px;
+  background: #faf9f7;
+}
+
+.inner {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(16px, 4vw, 22px);
+  color: #2c2420;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.sub {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 32px;
+  letter-spacing: 0.5px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #555;
+}
+
+.field input[type='text'] {
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+.field input[type='text']:focus { border-color: #d4af8a; }
+
+.options {
+  display: flex;
+  gap: 12px;
+}
+
+.option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+.option input { display: none; }
+.option.selected {
+  border-color: #d4af8a;
+  background: #fdf8f4;
+  color: #2c2420;
+}
+
+.error {
+  color: #e57373;
+  font-size: 13px;
+  text-align: center;
+}
+
+.submitBtn {
+  background: #2c2420;
+  color: #d4af8a;
+  border: none;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: 'Lato', sans-serif;
+  transition: background 0.2s;
+}
+.submitBtn:hover { background: #5c3d2e; }
+
+/* Submitted state */
+.thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+}
+
+.checkmark {
+  width: 56px;
+  height: 56px;
+  background: #d4af8a;
+  color: #2c2420;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.thanksMsg {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: #2c2420;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.editBtn {
+  background: none;
+  border: 1px solid #d4af8a;
+  color: #b8864e;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.editBtn:hover { background: #fdf8f4; }
+
+@media (max-width: 380px) {
+  .section { padding: 40px 16px; }
+  .options { flex-direction: column; }
+  .option { padding: 12px; }
+  .title { font-size: clamp(14px, 4vw, 20px); }
+}

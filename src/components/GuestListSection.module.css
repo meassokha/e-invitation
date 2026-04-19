@@ -1,0 +1,116 @@
+.wrapper { display: flex; flex-direction: column; gap: 16px; }
+
+.uploadRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.uploadBtn {
+  background: #2c2420;
+  color: #d4af8a;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.uploadBtn:hover { background: #5c3d2e; }
+.hint { font-size: 12px; color: #888; }
+
+.addRow {
+  display: flex;
+  gap: 8px;
+}
+.addRow input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+.addRow input:focus { border-color: #d4af8a; }
+
+.addBtn {
+  background: #d4af8a;
+  color: #2c2420;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+}
+.addBtn:hover { background: #c49a6c; }
+
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #666;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eee;
+}
+
+.copyAllBtn {
+  background: #5c3d2e;
+  color: #f0e6d6;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.copyAllBtn:hover { background: #7a5240; }
+
+.list { display: flex; flex-direction: column; gap: 8px; }
+
+.guestRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #ece8e2;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.guestName {
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 140px;
+  color: #2c2420;
+}
+
+.guestLink {
+  flex: 1;
+  font-size: 11px;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copyBtn {
+  background: #f0e6d6;
+  color: #5c3d2e;
+  border: 1px solid #d4af8a;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.copyBtn:hover { background: #d4af8a; }
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #bbb;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+}
+.removeBtn:hover { color: #e57373; }
