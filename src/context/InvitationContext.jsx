@@ -13,7 +13,7 @@ const defaultState = {
   locationAddress: '',
   footerText: '',
   guests: [],
-  mp3File: null,
+  mp3File: '/images/song.mp3',
   guestNamePosition: { top: 18, left: 50 },
   guestNameStyle: { fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#ffffff', shadowColor: '#000000', shadowSize: 6 },
   openBtnPosition: { top: 88, left: 50 },
@@ -32,6 +32,35 @@ const defaultState = {
 };
 
 const InvitationContext = createContext(null);
+
+// Defaults used when comparing what the host actually changed
+const SHAREABLE_DEFAULTS = {
+  eventDate: '', eventTime: '', eventTitle: '', detailsText: '', agendaText: '',
+  locationMapUrl: '', locationName: '', locationAddress: '', footerText: '',
+  mp3File: '/images/song.mp3',
+  guestNamePosition: { top: 18, left: 50 },
+  guestNameStyle: { fontFamily: "'Playfair Display', serif", fontSize: 24, color: '#ffffff', shadowColor: '#000000', shadowSize: 6 },
+  openBtnPosition: { top: 88, left: 50 },
+  openBtnStyle: { fontFamily: "'Lato', sans-serif", fontSize: 14, color: '#ffffff', shadowColor: '#000000', shadowSize: 0 },
+};
+
+// Encodes only the fields the host changed into a compact base64 hash.
+// Excludes uploaded images (too large) and base64 audio (too large).
+export function encodeInviteSettings(data) {
+  const { guests, images, mp3File: rawMp3, ...rest } = data;
+  const candidate = { ...rest };
+  // Include mp3File when it's a short path; null means "silence" (include to override default)
+  if (!rawMp3 || !rawMp3.startsWith('data:')) candidate.mp3File = rawMp3;
+  const diff = {};
+  for (const [key, val] of Object.entries(candidate)) {
+    if (JSON.stringify(val) !== JSON.stringify(SHAREABLE_DEFAULTS[key])) diff[key] = val;
+  }
+  if (!Object.keys(diff).length) return '';
+  const bytes = new TextEncoder().encode(JSON.stringify(diff));
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary);
+}
 
 export function InvitationProvider({ children }) {
   const [data, setData] = useState(() => {

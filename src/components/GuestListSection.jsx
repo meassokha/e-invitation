@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { useInvitation } from '../context/InvitationContext';
+import { useInvitation, encodeInviteSettings } from '../context/InvitationContext';
 import styles from './GuestListSection.module.css';
 
 export default function GuestListSection() {
@@ -12,15 +12,8 @@ export default function GuestListSection() {
 
   const baseUrl = `${window.location.origin}/invite`;
 
-  const settingsHash = (() => {
-    const { guests, mp3File, images, ...settings } = data;
-    const bytes = new TextEncoder().encode(JSON.stringify(settings));
-    let binary = '';
-    for (const byte of bytes) binary += String.fromCharCode(byte);
-    return btoa(binary);
-  })();
-
-  const guestLink = (name) => `${baseUrl}?guest=${encodeURIComponent(name)}#${settingsHash}`;
+  const settingsHash = encodeInviteSettings(data);
+  const guestLink = (name) => `${baseUrl}?guest=${encodeURIComponent(name)}${settingsHash ? '#' + settingsHash : ''}`;
 
   const handleFile = (e) => {
     const file = e.target.files[0];

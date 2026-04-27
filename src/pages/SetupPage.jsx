@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useInvitation } from '../context/InvitationContext';
+import { useInvitation, encodeInviteSettings } from '../context/InvitationContext';
 import GuestListSection from '../components/GuestListSection';
 import ImageUploader from '../components/ImageUploader';
 import styles from './SetupPage.module.css';
@@ -49,15 +49,10 @@ export default function SetupPage() {
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
   }, [dragTarget]);
 
-  const buildSettingsHash = () => {
-    const { guests, mp3File, images, ...settings } = data;
-    const bytes = new TextEncoder().encode(JSON.stringify(settings));
-    let binary = '';
-    for (const byte of bytes) binary += String.fromCharCode(byte);
-    return btoa(binary);
+  const getPreviewUrl = (guestLabel = 'Preview+Guest') => {
+    const hash = encodeInviteSettings(data);
+    return `${window.location.origin}/invite?guest=${guestLabel}${hash ? '#' + hash : ''}`;
   };
-  const getPreviewUrl = (guestLabel = 'Preview+Guest') =>
-    `${window.location.origin}/invite?guest=${guestLabel}#${buildSettingsHash()}`;
 
   const openPreview = () => {
     window.open(getPreviewUrl(), '_blank');
