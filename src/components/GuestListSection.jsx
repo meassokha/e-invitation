@@ -12,7 +12,15 @@ export default function GuestListSection() {
 
   const baseUrl = `${window.location.origin}/invite`;
 
-  const guestLink = (name) => `${baseUrl}?guest=${encodeURIComponent(name)}`;
+  const settingsHash = (() => {
+    const { guests, mp3File, images, ...settings } = data;
+    const bytes = new TextEncoder().encode(JSON.stringify(settings));
+    let binary = '';
+    for (const byte of bytes) binary += String.fromCharCode(byte);
+    return btoa(binary);
+  })();
+
+  const guestLink = (name) => `${baseUrl}?guest=${encodeURIComponent(name)}#${settingsHash}`;
 
   const handleFile = (e) => {
     const file = e.target.files[0];

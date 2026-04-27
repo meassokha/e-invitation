@@ -49,13 +49,22 @@ export default function SetupPage() {
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
   }, [dragTarget]);
 
-  const previewUrl = `${window.location.origin}/invite?guest=Preview+Guest`;
+  const buildSettingsHash = () => {
+    const { guests, mp3File, images, ...settings } = data;
+    const bytes = new TextEncoder().encode(JSON.stringify(settings));
+    let binary = '';
+    for (const byte of bytes) binary += String.fromCharCode(byte);
+    return btoa(binary);
+  };
+  const getPreviewUrl = (guestLabel = 'Preview+Guest') =>
+    `${window.location.origin}/invite?guest=${guestLabel}#${buildSettingsHash()}`;
+
   const openPreview = () => {
-    window.open(previewUrl, '_blank');
+    window.open(getPreviewUrl(), '_blank');
     setTimeout(() => broadcastUpdate(), 1000);
   };
   const copyPreview = () => {
-    navigator.clipboard.writeText(previewUrl);
+    navigator.clipboard.writeText(getPreviewUrl());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

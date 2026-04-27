@@ -4,7 +4,6 @@ import { useInvitation } from '../context/InvitationContext';
 import RSVPSection from '../components/RSVPSection';
 import styles from './InvitePage.module.css';
 
-// Hide image element if the file doesn't exist in /public/images/
 const onImgError = (e) => { e.target.style.display = 'none'; };
 
 export default function InvitePage() {
@@ -14,6 +13,32 @@ export default function InvitePage() {
   const bodyRef = useRef();
   const audioRef = useRef();
   const [audioBlocked, setAudioBlocked] = useState(false);
+
+  // Decode invitation settings from URL hash (shared guest links)
+  const [urlSettings, setUrlSettings] = useState(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return null;
+    try {
+      const binary = atob(hash);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return JSON.parse(new TextDecoder().decode(bytes));
+    } catch {
+      return null;
+    }
+  });
+
+  // When a live setup tab broadcasts (same-browser preview), switch to live data
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const ch = new BroadcastChannel('einvitation_sync');
+    ch.onmessage = (e) => { if (e.data?.type === 'SYNC') setUrlSettings(null); };
+    return () => ch.close();
+  }, []);
+
+  // Guests see URL-decoded settings; same-browser preview sees live context data
+  const effectiveData = urlSettings ? { ...data, ...urlSettings } : data;
 
   const tryPlay = () => {
     if (!audioRef.current) return;
@@ -27,17 +52,15 @@ export default function InvitePage() {
     tryPlay();
   };
 
-  // Load audio source when mp3 changes (don't autoplay — play on OPEN click)
   useEffect(() => {
-    if (!data.mp3File) return;
+    if (!effectiveData.mp3File) return;
     if (audioRef.current) audioRef.current.load();
-  }, [data.mp3File]);
+  }, [effectiveData.mp3File]);
 
-  // Countdown timer
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   useEffect(() => {
-    if (!data.eventDate) return;
-    const target = new Date(data.eventDate + 'T00:00:00');
+    if (!effectiveData.eventDate) return;
+    const target = new Date(effectiveData.eventDate + 'T00:00:00');
     const tick = () => {
       const diff = target - new Date();
       if (diff <= 0) { setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
@@ -51,31 +74,30 @@ export default function InvitePage() {
     tick();
     const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
-  }, [data.eventDate]);
+  }, [effectiveData.eventDate]);
 
-  const formattedDate = data.eventDate
-    ? new Date(data.eventDate + 'T00:00:00').toLocaleDateString('en-GB', {
+  const formattedDate = effectiveData.eventDate
+    ? new Date(effectiveData.eventDate + 'T00:00:00').toLocaleDateString('en-GB', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
       })
     : '';
 
-  const pos    = data.guestNamePosition ?? { top: 18, left: 50 };
-  const gns    = data.guestNameStyle    ?? {};
-  const btnPos = data.openBtnPosition   ?? { top: 88, left: 50 };
-  const obs    = data.openBtnStyle      ?? {};
+  const pos    = effectiveData.guestNamePosition ?? { top: 18, left: 50 };
+  const gns    = effectiveData.guestNameStyle    ?? {};
+  const btnPos = effectiveData.openBtnPosition   ?? { top: 88, left: 50 };
+  const obs    = effectiveData.openBtnStyle      ?? {};
 
   return (
     <div className={styles.page}>
 
-      {/* Background music */}
-      {data.mp3File && <audio ref={audioRef} src={data.mp3File} loop preload="auto" />}
-      {data.mp3File && audioBlocked && (
+      {effectiveData.mp3File && <audio ref={audioRef} src={effectiveData.mp3File} loop preload="auto" />}
+      {effectiveData.mp3File && audioBlocked && (
         <button className={styles.musicPlayBtn} onClick={tryPlay}>♪ Tap to play music</button>
       )}
 
       {/* ── COVER ── */}
       <section className={styles.cover}>
-        <img src={data.images?.cover || '/images/cover.jpg'} alt="cover" className={styles.coverImg} onError={onImgError} />
+        <img src={effectiveData.images?.cover || '/images/cover.jpg'} alt="cover" className={styles.coverImg} onError={onImgError} />
 
         {guestName && (
           <div
@@ -116,36 +138,32 @@ export default function InvitePage() {
       {/* ── BODY ── */}
       <div ref={bodyRef} className={styles.body}>
 
-        {/* Event Title */}
-        {data.eventTitle && (
+        {effectiveData.eventTitle && (
           <section className={styles.titleSection}>
-            <h1 className={styles.eventTitle}>{data.eventTitle}</h1>
+            <h1 className={styles.eventTitle}>{effectiveData.eventTitle}</h1>
           </section>
         )}
 
-        {/* Couple Photos */}
         <section className={styles.photosSection}>
           <div className={styles.photosGrid}>
-            <img src={data.images?.couple1 || '/images/couple1.jpg'} alt="couple 1" className={styles.couplePhoto} onError={onImgError} />
-            <img src={data.images?.couple2 || '/images/couple2.jpg'} alt="couple 2" className={styles.couplePhoto} onError={onImgError} />
-            <img src={data.images?.couple3 || '/images/couple3.jpg'} alt="couple 3" className={styles.couplePhoto} onError={onImgError} />
+            <img src={effectiveData.images?.couple1 || '/images/couple1.jpg'} alt="couple 1" className={styles.couplePhoto} onError={onImgError} />
+            <img src={effectiveData.images?.couple2 || '/images/couple2.jpg'} alt="couple 2" className={styles.couplePhoto} onError={onImgError} />
+            <img src={effectiveData.images?.couple3 || '/images/couple3.jpg'} alt="couple 3" className={styles.couplePhoto} onError={onImgError} />
           </div>
         </section>
 
-        {/* Body Design */}
         <section className={styles.fullWidthImg}>
-          <img src={data.images?.bodyDesign || '/images/body-design.jpg'} alt="design" onError={onImgError} />
+          <img src={effectiveData.images?.bodyDesign || '/images/body-design.jpg'} alt="design" onError={onImgError} />
         </section>
 
-        {/* Event Date + Countdown */}
-        {(formattedDate || data.eventTime) && (
+        {(formattedDate || effectiveData.eventTime) && (
           <section className={styles.dateSection}>
             <div className={styles.dateDivider}><span>Save The Date</span></div>
             <div className={styles.dateDisplay}>
               {formattedDate && <p className={styles.dateText}>{formattedDate}</p>}
-              {data.eventTime && <p className={styles.timeText}>{data.eventTime}</p>}
+              {effectiveData.eventTime && <p className={styles.timeText}>{effectiveData.eventTime}</p>}
             </div>
-            {data.eventDate && (
+            {effectiveData.eventDate && (
               <div className={styles.countdown}>
                 <p className={styles.countdownLabel}>Until Big Day</p>
                 <div className={styles.countdownRow}>
@@ -171,34 +189,30 @@ export default function InvitePage() {
           </section>
         )}
 
-        {/* Details Image */}
         <section className={styles.detailsImgSection}>
-          <img src={data.images?.details || '/images/details.jpg'} alt="details" className={styles.detailsBodyImg} onError={onImgError} />
+          <img src={effectiveData.images?.details || '/images/details.jpg'} alt="details" className={styles.detailsBodyImg} onError={onImgError} />
         </section>
 
-        {/* Details Text */}
-        {data.detailsText && (
+        {effectiveData.detailsText && (
           <section className={styles.detailsTextSection}>
-            <p className={styles.detailsText}>{data.detailsText}</p>
+            <p className={styles.detailsText}>{effectiveData.detailsText}</p>
           </section>
         )}
 
-        {/* Agenda Image */}
         <section className={styles.agendaImgSection}>
-          <img src={data.images?.agenda || '/images/agenda.jpg'} alt="agenda" className={styles.agendaFullImg} onError={onImgError} />
+          <img src={effectiveData.images?.agenda || '/images/agenda.jpg'} alt="agenda" className={styles.agendaFullImg} onError={onImgError} />
         </section>
 
-        {/* Venue */}
         <section className={styles.locationSection}>
           <h2 className={styles.sectionTitle}>Venue</h2>
-          {data.locationName    && <p className={styles.venueName}>{data.locationName}</p>}
-          {data.locationAddress && <p className={styles.venueAddress}>{data.locationAddress}</p>}
+          {effectiveData.locationName    && <p className={styles.venueName}>{effectiveData.locationName}</p>}
+          {effectiveData.locationAddress && <p className={styles.venueAddress}>{effectiveData.locationAddress}</p>}
           <div className={styles.locationMedia}>
-            <img src={data.images?.venue || '/images/venue.jpg'} alt="venue" className={styles.venuePhoto} onError={onImgError} />
-            {data.locationMapUrl && (
+            <img src={effectiveData.images?.venue || '/images/venue.jpg'} alt="venue" className={styles.venuePhoto} onError={onImgError} />
+            {effectiveData.locationMapUrl && (
               <iframe
                 title="map"
-                src={data.locationMapUrl}
+                src={effectiveData.locationMapUrl}
                 className={styles.mapEmbed}
                 allowFullScreen
                 loading="lazy"
@@ -208,17 +222,15 @@ export default function InvitePage() {
           </div>
           <div className={styles.qrWrapper}>
             <p className={styles.qrLabel}>Scan for directions</p>
-            <img src={data.images?.qr || '/images/qr.png'} alt="QR code" className={styles.qrImg} onError={onImgError} />
+            <img src={effectiveData.images?.qr || '/images/qr.png'} alt="QR code" className={styles.qrImg} onError={onImgError} />
           </div>
         </section>
 
-        {/* RSVP */}
         <RSVPSection guestName={guestName} />
 
-        {/* Footer */}
-        {data.footerText && (
+        {effectiveData.footerText && (
           <footer className={styles.footer}>
-            <p>{data.footerText}</p>
+            <p>{effectiveData.footerText}</p>
           </footer>
         )}
       </div>
