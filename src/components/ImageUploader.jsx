@@ -7,8 +7,20 @@ export default function ImageUploader({ label, value, onChange, hint }) {
   const handleFile = (file) => {
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (e) => onChange(e.target.result);
-    reader.readAsDataURL(file);
+    if (file.name.toLowerCase().endsWith('.svg') || file.type === 'image/svg+xml') {
+      reader.onload = (e) => {
+        // Re-read via Blob to force correct MIME type in the base64 data URL,
+        // because Windows often gives SVG files a text/xml MIME type instead of image/svg+xml.
+        const blob = new Blob([e.target.result], { type: 'image/svg+xml' });
+        const blobReader = new FileReader();
+        blobReader.onload = (ev) => onChange(ev.target.result);
+        blobReader.readAsDataURL(blob);
+      };
+      reader.readAsText(file);
+    } else {
+      reader.onload = (e) => onChange(e.target.result);
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleDrop = (e) => {
@@ -33,7 +45,7 @@ export default function ImageUploader({ label, value, onChange, hint }) {
           <div className={styles.placeholder}>
             <span className={styles.icon}>⬆</span>
             <span>Click or drag to upload</span>
-            <span className={styles.small}>PNG, JPG supported</span>
+            <span className={styles.small}>PNG, JPG, SVG supported</span>
           </div>
         )}
       </div>
@@ -45,7 +57,7 @@ export default function ImageUploader({ label, value, onChange, hint }) {
       <input
         ref={inputRef}
         type="file"
-        accept="image/png,image/jpeg,image/jpg"
+        accept="image/png,image/jpeg,image/jpg,image/svg+xml,.svg"
         style={{ display: 'none' }}
         onChange={(e) => handleFile(e.target.files[0])}
       />

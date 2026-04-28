@@ -76,7 +76,20 @@ export function InvitationProvider({ children }) {
   }, [data]);
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* quota exceeded */ }
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch {
+      // Quota exceeded — save without images so text data always persists.
+      // Images are synced between tabs via BroadcastChannel.
+      try {
+        const stripped = {
+          ...data,
+          images: Object.fromEntries(Object.keys(data.images ?? {}).map((k) => [k, null])),
+          mp3File: null,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stripped));
+      } catch { /* still too large, skip */ }
+    }
   }, [data]);
 
   const update = (patch) => setData((prev) => ({ ...prev, ...patch }));
