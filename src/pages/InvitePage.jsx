@@ -38,6 +38,7 @@ export default function InvitePage() {
   const bodyRef = useRef()
   const audioRef = useRef()
   const [audioBlocked, setAudioBlocked] = useState(false)
+  const [lightbox, setLightbox] = useState(null) // null = closed, 0/1/2 = photo index
 
   const tryPlay = () => {
     if (!audioRef.current) return
@@ -162,28 +163,29 @@ export default function InvitePage() {
         )}
 
         {/* Couple Photos */}
-        <section className={styles.photosSection}>
-          <div className={styles.photosGrid}>
-            <img
-              src={data.images?.couple1 || "/images/couple1.jpg"}
-              alt="couple 1"
-              className={styles.couplePhoto}
-              onError={onImgError}
-            />
-            <img
-              src={data.images?.couple2 || "/images/couple2.jpg"}
-              alt="couple 2"
-              className={styles.couplePhoto}
-              onError={onImgError}
-            />
-            <img
-              src={data.images?.couple3 || "/images/couple3.jpg"}
-              alt="couple 3"
-              className={styles.couplePhoto}
-              onError={onImgError}
-            />
-          </div>
-        </section>
+        {(() => {
+          const photos = [
+            data.images?.couple1 || "/images/couple1.jpg",
+            data.images?.couple2 || "/images/couple2.jpg",
+            data.images?.couple3 || "/images/couple3.jpg",
+          ]
+          return (
+            <section className={styles.photosSection}>
+              <div className={styles.photosGrid}>
+                {photos.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`couple ${i + 1}`}
+                    className={styles.couplePhoto}
+                    onError={onImgError}
+                    onClick={() => setLightbox(i)}
+                  />
+                ))}
+              </div>
+            </section>
+          )
+        })()}
 
         {/* Body Design */}
         <section className={styles.fullWidthImg}>
@@ -305,6 +307,40 @@ export default function InvitePage() {
           </footer>
         )}
       </div>
+
+      {/* Lightbox */}
+      {lightbox !== null && (() => {
+        const photos = [
+          data.images?.couple1 || "/images/couple1.jpg",
+          data.images?.couple2 || "/images/couple2.jpg",
+          data.images?.couple3 || "/images/couple3.jpg",
+        ]
+        const prev = () => setLightbox((lightbox + 2) % photos.length)
+        const next = () => setLightbox((lightbox + 1) % photos.length)
+        return (
+          <div className={styles.lightboxOverlay} onClick={() => setLightbox(null)}>
+            <button className={styles.lightboxClose} onClick={() => setLightbox(null)}>✕</button>
+            <button className={styles.lightboxPrev} onClick={(e) => { e.stopPropagation(); prev() }}>‹</button>
+            <img
+              className={styles.lightboxImg}
+              src={photos[lightbox]}
+              alt={`couple ${lightbox + 1}`}
+              onClick={(e) => e.stopPropagation()}
+              onError={onImgError}
+            />
+            <button className={styles.lightboxNext} onClick={(e) => { e.stopPropagation(); next() }}>›</button>
+            <div className={styles.lightboxDots}>
+              {photos.map((_, i) => (
+                <span
+                  key={i}
+                  className={`${styles.lightboxDot} ${i === lightbox ? styles.lightboxDotActive : ''}`}
+                  onClick={(e) => { e.stopPropagation(); setLightbox(i) }}
+                />
+              ))}
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }
