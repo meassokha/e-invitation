@@ -14,7 +14,7 @@ const defaultState = {
   footerText: "",
   guests: [],
   mp3File: null,
-  guestNamePosition: { top: 70, left: 50 },
+  guestNamePosition: { top: 83, left: 50 },
   guestNameStyle: {
     fontFamily: "'Playfair Display', serif",
     fontSize: 24,

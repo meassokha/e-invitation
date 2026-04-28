@@ -73,7 +73,7 @@ export default function InvitePage() {
       })
     : ""
 
-  const pos = data.guestNamePosition ?? { top: 70, left: 50 }
+  const pos = data.guestNamePosition ?? { top: 83, left: 50 }
   const gns = data.guestNameStyle ?? {}
   const btnPos = data.openBtnPosition ?? { top: 88, left: 50 }
   const obs = data.openBtnStyle ?? {}
