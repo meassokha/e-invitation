@@ -24,7 +24,7 @@ const OPEN_BTN = {
   top: 93,
   left: 50, // position on cover image (%)
   fontFamily: "'Lato', sans-serif",
-  fontSize: 24, // px
+  fontSize: 20, // px
   color: "#ffffff",
   shadowColor: "#000000",
   shadowSize: 0, // px — set to 0 for no shadow
@@ -53,9 +53,9 @@ export default function InvitePage() {
   }
 
   // ── Edit these to change the event date, time, and song ──────────────────
-  const EVENT_DATE = "2026-05-22"   // YYYY-MM-DD
-  const EVENT_TIME = "06:00"        // 24-hour HH:MM
-  const SONG_SRC   = "/images/song.mp3"
+  const EVENT_DATE = "2026-05-22" // YYYY-MM-DD
+  const EVENT_TIME = "06:00" // 24-hour HH:MM
+  const SONG_SRC = "/images/song.mp3"
   // ──────────────────────────────────────────────────────────────────────────
 
   // Countdown timer
@@ -85,12 +85,15 @@ export default function InvitePage() {
     return () => clearInterval(timer)
   }, [])
 
-  const formattedDate = new Date(EVENT_DATE + "T00:00:00").toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  })
+  const formattedDate = new Date(EVENT_DATE + "T00:00:00").toLocaleDateString(
+    "en-GB",
+    {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    },
+  )
 
   return (
     <div className={styles.page}>
@@ -216,7 +219,9 @@ export default function InvitePage() {
                 <span className={styles.countdownText}>Minutes</span>
               </div>
               <div className={styles.countdownUnit}>
-                <span className={`${styles.countdownNum} ${styles.countdownSec}`}>
+                <span
+                  className={`${styles.countdownNum} ${styles.countdownSec}`}
+                >
                   {countdown.seconds}
                 </span>
                 <span className={styles.countdownText}>Seconds</span>
