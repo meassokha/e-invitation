@@ -1,53 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useInvitation } from '../context/InvitationContext';
 import GuestListSection from '../components/GuestListSection';
 import ImageUploader from '../components/ImageUploader';
 import styles from './SetupPage.module.css';
 
-const FONTS = [
-  { label: 'Playfair Display', value: "'Playfair Display', serif" },
-  { label: 'Lato', value: "'Lato', sans-serif" },
-  { label: 'Georgia', value: 'Georgia, serif' },
-  { label: 'Arial', value: 'Arial, sans-serif' },
-  { label: 'Times New Roman', value: "'Times New Roman', serif" },
-  { label: 'Courier New', value: "'Courier New', monospace" },
-];
 
 export default function SetupPage() {
   const { data, update, broadcastUpdate } = useInvitation();
   const [copied, setCopied] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [activeSection, setActiveSection] = useState('cover');
-  const [dragTarget, setDragTarget] = useState(null);
-  const [previewScale, setPreviewScale] = useState(0.55);
   const previewCoverRef = useRef(null);
-
-  const startDrag = (target) => (e) => { e.preventDefault(); setDragTarget(target); };
-
-  useEffect(() => {
-    const updateScale = () => {
-      if (previewCoverRef.current) setPreviewScale(previewCoverRef.current.offsetWidth / 640);
-    };
-    updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, []);
-
-  useEffect(() => {
-    if (!dragTarget) return;
-    const onMove = (e) => {
-      if (!previewCoverRef.current) return;
-      const rect = previewCoverRef.current.getBoundingClientRect();
-      const left = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
-      const top = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
-      if (dragTarget === 'guest') update({ guestNamePosition: { top, left } });
-      else update({ openBtnPosition: { top, left } });
-    };
-    const onUp = () => setDragTarget(null);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
-  }, [dragTarget]);
 
   const previewUrl = `${window.location.origin}/invite?guest=Preview+Guest`;
   const openPreview = () => {
@@ -67,18 +30,11 @@ export default function SetupPage() {
 
   const sections = [
     { id: 'cover',    label: '1. Cover & Labels' },
-    { id: 'event',    label: '2. Event Date & Time' },
-    { id: 'music',    label: '3. Background Music' },
-    { id: 'location', label: '4. Venue & Location' },
-    { id: 'footer',   label: '5. Footer' },
-    { id: 'guests',   label: '6. Guest List' },
-    { id: 'images',   label: '7. Images' },
+    { id: 'location', label: '2. Venue & Location' },
+    { id: 'footer',   label: '3. Footer' },
+    { id: 'guests',   label: '4. Guest List' },
+    { id: 'images',   label: '5. Images' },
   ];
-
-  const pos    = data.guestNamePosition ?? { top: 18, left: 50 };
-  const btnPos = data.openBtnPosition   ?? { top: 88, left: 50 };
-  const gns    = data.guestNameStyle    ?? {};
-  const obs    = data.openBtnStyle      ?? {};
 
   return (
     <div className={styles.layout}>
@@ -126,74 +82,13 @@ export default function SetupPage() {
                   placeholder="e.g. The Wedding of Aryan & Sofia"
                 />
               </Field>
-              <StyleControls
-                label="Guest Name Style"
-                value={gns}
-                onChange={(v) => update({ guestNameStyle: v })}
-              />
-              <StyleControls
-                label="OPEN Button Style"
-                value={obs}
-                onChange={(v) => update({ openBtnStyle: v })}
-              />
               <p className={styles.hint} style={{ marginTop: 8 }}>
-                Drag the labels in the preview panel (right side) to reposition them on the cover.
+                To change the guest name or OPEN button position, font, color, or size — edit the constants at the top of <code>src/pages/InvitePage.jsx</code>.
               </p>
             </Section>
           )}
 
-          {/* 2. Event Date & Time */}
-          {activeSection === 'event' && (
-            <Section>
-              <div className={styles.row}>
-                <Field label="Event Date">
-                  <input
-                    type="date"
-                    value={data.eventDate}
-                    onChange={(e) => update({ eventDate: e.target.value })}
-                  />
-                </Field>
-                <Field label="Event Time">
-                  <input
-                    type="time"
-                    value={data.eventTime}
-                    onChange={(e) => update({ eventTime: e.target.value })}
-                  />
-                </Field>
-              </div>
-            </Section>
-          )}
-
-          {/* 3. Background Music */}
-          {activeSection === 'music' && (
-            <Section>
-              <Field label="Background Music (MP3)" hint="Music plays automatically when guests open the invitation">
-                {data.mp3File ? (
-                  <div className={styles.audioPreview}>
-                    <audio src={data.mp3File} controls className={styles.audioPlayer} />
-                    <button className={styles.removeAudioBtn} onClick={() => update({ mp3File: null })}>
-                      Remove Music
-                    </button>
-                  </div>
-                ) : (
-                  <input
-                    type="file"
-                    accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg"
-                    className={styles.fileInput}
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = (ev) => update({ mp3File: ev.target.result });
-                      reader.readAsDataURL(file);
-                    }}
-                  />
-                )}
-              </Field>
-            </Section>
-          )}
-
-          {/* 4. Venue & Location */}
+          {/* 2. Venue & Location */}
           {activeSection === 'location' && (
             <Section>
               <Field label="Venue Name">
@@ -230,7 +125,7 @@ export default function SetupPage() {
             </Section>
           )}
 
-          {/* 5. Footer */}
+          {/* 3. Footer */}
           {activeSection === 'footer' && (
             <Section>
               <Field label="Footer Text">
@@ -244,10 +139,10 @@ export default function SetupPage() {
             </Section>
           )}
 
-          {/* 6. Guest List */}
+          {/* 4. Guest List */}
           {activeSection === 'guests' && <GuestListSection />}
 
-          {/* 7. Images */}
+          {/* 5. Images */}
           {activeSection === 'images' && (
             <Section>
               <p style={{ fontSize: '13px', color: '#888', marginTop: -8 }}>
@@ -282,7 +177,6 @@ export default function SetupPage() {
       {/* ── Cover Preview Panel ── */}
       <aside className={styles.previewPanel}>
         <p className={styles.previewTitle}>Cover Preview</p>
-        <p className={styles.previewHint}>Drag labels to reposition</p>
 
         <div className={styles.previewCoverWrapper}>
           <div className={styles.previewCover} ref={previewCoverRef}>
@@ -293,49 +187,20 @@ export default function SetupPage() {
               onError={(e) => { e.target.style.display = 'none'; }}
             />
 
-            {/* Draggable guest name – live styled */}
             <div
               className={styles.previewGuestName}
-              style={{
-                top: `${pos.top}%`,
-                left: `${pos.left}%`,
-                fontFamily: gns.fontFamily,
-                fontSize: `${Math.max(8, Math.round((gns.fontSize ?? 24) * previewScale))}px`,
-                color: gns.color ?? '#ffffff',
-                textShadow: (gns.shadowSize ?? 6) > 0
-                  ? `0 1px ${Math.max(1, Math.round((gns.shadowSize ?? 6) * previewScale))}px ${gns.shadowColor ?? '#000000'}`
-                  : 'none',
-              }}
-              onMouseDown={startDrag('guest')}
-              title="Drag to reposition guest name"
+              style={{ top: '83%', left: '50%', color: '#ffffff', textShadow: '0 1px 6px #000000' }}
             >
               Guest Name
             </div>
 
-            {/* Draggable OPEN button – live styled */}
             <div
               className={styles.previewOpenBtn}
-              style={{
-                top: `${btnPos.top}%`,
-                left: `${btnPos.left}%`,
-                fontFamily: obs.fontFamily,
-                fontSize: `${Math.max(7, Math.round((obs.fontSize ?? 14) * previewScale))}px`,
-                color: obs.color ?? '#ffffff',
-                textShadow: (obs.shadowSize ?? 0) > 0
-                  ? `0 1px ${Math.max(1, Math.round(obs.shadowSize * previewScale))}px ${obs.shadowColor ?? '#000000'}`
-                  : 'none',
-              }}
-              onMouseDown={startDrag('openBtn')}
-              title="Drag to reposition OPEN button"
+              style={{ top: '88%', left: '50%', color: '#ffffff' }}
             >
               OPEN
             </div>
           </div>
-        </div>
-
-        <div className={styles.previewCoords}>
-          <span>Name: {Math.round(pos.left)}% L, {Math.round(pos.top)}% T</span>
-          <span>OPEN: {Math.round(btnPos.left)}% L, {Math.round(btnPos.top)}% T</span>
         </div>
       </aside>
     </div>
@@ -360,51 +225,3 @@ function Field({ label, hint, children }) {
   );
 }
 
-function StyleControls({ label, value, onChange }) {
-  const v = {
-    fontFamily: "'Playfair Display', serif",
-    fontSize: 24,
-    color: '#ffffff',
-    shadowColor: '#000000',
-    shadowSize: 6,
-    ...value,
-  };
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '14px', background: '#f5f2ef', borderRadius: '8px', border: '1px solid #e8e2da' }}>
-      <label style={{ fontWeight: 700, fontSize: '12px', color: '#5c3d2e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</label>
-      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-        <div style={{ flex: '1', minWidth: '140px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase' }}>Font</label>
-          <select value={v.fontFamily} onChange={(e) => onChange({ ...v, fontFamily: e.target.value })}
-            style={{ padding: '7px 8px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '13px', background: '#fff' }}>
-            {FONTS.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
-          </select>
-        </div>
-        <div style={{ width: '76px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase' }}>Size px</label>
-          <input type="number" min={8} max={72} value={v.fontSize}
-            onChange={(e) => onChange({ ...v, fontSize: Number(e.target.value) })}
-            style={{ padding: '7px 8px', border: '1px solid #ddd', borderRadius: '5px', fontSize: '13px', width: '100%' }} />
-        </div>
-      </div>
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase' }}>Text Color</label>
-          <input type="color" value={v.color} onChange={(e) => onChange({ ...v, color: e.target.value })}
-            style={{ width: '48px', height: '34px', border: '1px solid #ddd', borderRadius: '5px', cursor: 'pointer', padding: '2px' }} />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase' }}>Shadow Color</label>
-          <input type="color" value={v.shadowColor} onChange={(e) => onChange({ ...v, shadowColor: e.target.value })}
-            style={{ width: '48px', height: '34px', border: '1px solid #ddd', borderRadius: '5px', cursor: 'pointer', padding: '2px' }} />
-        </div>
-        <div style={{ flex: '1', minWidth: '120px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase' }}>Shadow Size: {v.shadowSize}px</label>
-          <input type="range" min={0} max={24} value={v.shadowSize}
-            onChange={(e) => onChange({ ...v, shadowSize: Number(e.target.value) })}
-            style={{ width: '100%', accentColor: '#d4af8a' }} />
-        </div>
-      </div>
-    </div>
-  );
-}

@@ -3,8 +3,6 @@ import { createContext, useContext, useState, useEffect, useRef } from "react"
 const STORAGE_KEY = "einvitation_data"
 
 const defaultState = {
-  eventDate: "",
-  eventTime: "",
   eventTitle: "",
   detailsText: "",
   agendaText: "",
@@ -13,23 +11,6 @@ const defaultState = {
   locationAddress: "",
   footerText: "",
   guests: [],
-  mp3File: null,
-  guestNamePosition: { top: 83, left: 50 },
-  guestNameStyle: {
-    fontFamily: "'Playfair Display', serif",
-    fontSize: 24,
-    color: "#ffffff",
-    shadowColor: "#000000",
-    shadowSize: 6,
-  },
-  openBtnPosition: { top: 88, left: 50 },
-  openBtnStyle: {
-    fontFamily: "'Lato', sans-serif",
-    fontSize: 14,
-    color: "#ffffff",
-    shadowColor: "#000000",
-    shadowSize: 0,
-  },
   images: {
     cover: null,
     couple1: null,
@@ -111,7 +92,6 @@ export function InvitationProvider({ children }) {
           images: Object.fromEntries(
             Object.keys(data.images ?? {}).map((k) => [k, null]),
           ),
-          mp3File: null,
         }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(stripped))
       } catch {

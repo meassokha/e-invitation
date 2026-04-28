@@ -9,6 +9,28 @@ const onImgError = (e) => {
   e.target.style.display = "none"
 }
 
+// ── Edit these values to change position / style of guest name & OPEN button ──
+const GUEST_NAME = {
+  top: 83,
+  left: 50, // position on cover image (%)
+  fontFamily: "'Playfair Display', serif",
+  fontSize: 38, // px
+  color: "#ffffff",
+  shadowColor: "#000000",
+  shadowSize: 6, // px — set to 0 for no shadow
+}
+
+const OPEN_BTN = {
+  top: 93,
+  left: 50, // position on cover image (%)
+  fontFamily: "'Lato', sans-serif",
+  fontSize: 24, // px
+  color: "#ffffff",
+  shadowColor: "#000000",
+  shadowSize: 0, // px — set to 0 for no shadow
+}
+// ──────────────────────────────────────────────────────────────────────────────
+
 export default function InvitePage() {
   const [params] = useSearchParams()
   const guestName = params.get("guest") || ""
@@ -30,11 +52,11 @@ export default function InvitePage() {
     tryPlay()
   }
 
-  // Load audio source when mp3 changes (don't autoplay — play on OPEN click)
-  useEffect(() => {
-    if (!data.mp3File) return
-    if (audioRef.current) audioRef.current.load()
-  }, [data.mp3File])
+  // ── Edit these to change the event date, time, and song ──────────────────
+  const EVENT_DATE = "2026-05-22"   // YYYY-MM-DD
+  const EVENT_TIME = "06:00"        // 24-hour HH:MM
+  const SONG_SRC   = "/images/song.mp3"
+  // ──────────────────────────────────────────────────────────────────────────
 
   // Countdown timer
   const [countdown, setCountdown] = useState({
@@ -44,8 +66,7 @@ export default function InvitePage() {
     seconds: 0,
   })
   useEffect(() => {
-    if (!data.eventDate) return
-    const target = new Date(data.eventDate + "T00:00:00")
+    const target = new Date(EVENT_DATE + "T00:00:00")
     const tick = () => {
       const diff = target - new Date()
       if (diff <= 0) {
@@ -62,29 +83,20 @@ export default function InvitePage() {
     tick()
     const timer = setInterval(tick, 1000)
     return () => clearInterval(timer)
-  }, [data.eventDate])
+  }, [])
 
-  const formattedDate = data.eventDate
-    ? new Date(data.eventDate + "T00:00:00").toLocaleDateString("en-GB", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
-    : ""
-
-  const pos = data.guestNamePosition ?? { top: 83, left: 50 }
-  const gns = data.guestNameStyle ?? {}
-  const btnPos = data.openBtnPosition ?? { top: 88, left: 50 }
-  const obs = data.openBtnStyle ?? {}
+  const formattedDate = new Date(EVENT_DATE + "T00:00:00").toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  })
 
   return (
     <div className={styles.page}>
       {/* Background music */}
-      {data.mp3File && (
-        <audio ref={audioRef} src={data.mp3File} loop preload="auto" />
-      )}
-      {data.mp3File && audioBlocked && (
+      <audio ref={audioRef} src={SONG_SRC} loop preload="auto" />
+      {audioBlocked && (
         <button className={styles.musicPlayBtn} onClick={tryPlay}>
           ♪ Tap to play music
         </button>
@@ -103,14 +115,14 @@ export default function InvitePage() {
           <div
             className={styles.guestLabel}
             style={{
-              top: `${pos.top}%`,
-              left: `${pos.left}%`,
-              fontFamily: gns.fontFamily,
-              fontSize: `${gns.fontSize ?? 24}px`,
-              color: gns.color ?? "#ffffff",
+              top: `${GUEST_NAME.top}%`,
+              left: `${GUEST_NAME.left}%`,
+              fontFamily: GUEST_NAME.fontFamily,
+              fontSize: `${GUEST_NAME.fontSize}px`,
+              color: GUEST_NAME.color,
               textShadow:
-                (gns.shadowSize ?? 6) > 0
-                  ? `0 1px ${gns.shadowSize}px ${gns.shadowColor ?? "#000000"}`
+                GUEST_NAME.shadowSize > 0
+                  ? `0 1px ${GUEST_NAME.shadowSize}px ${GUEST_NAME.shadowColor}`
                   : "none",
             }}
           >
@@ -122,14 +134,14 @@ export default function InvitePage() {
           className={styles.openBtn}
           onClick={scrollToBody}
           style={{
-            top: `${btnPos.top}%`,
-            left: `${btnPos.left}%`,
-            fontFamily: obs.fontFamily,
-            fontSize: `${obs.fontSize ?? 14}px`,
-            color: obs.color ?? "#ffffff",
+            top: `${OPEN_BTN.top}%`,
+            left: `${OPEN_BTN.left}%`,
+            fontFamily: OPEN_BTN.fontFamily,
+            fontSize: `${OPEN_BTN.fontSize}px`,
+            color: OPEN_BTN.color,
             textShadow:
-              (obs.shadowSize ?? 0) > 0
-                ? `0 1px ${obs.shadowSize}px ${obs.shadowColor ?? "#000000"}`
+              OPEN_BTN.shadowSize > 0
+                ? `0 1px ${OPEN_BTN.shadowSize}px ${OPEN_BTN.shadowColor}`
                 : "none",
           }}
         >
@@ -180,54 +192,38 @@ export default function InvitePage() {
         </section>
 
         {/* Event Date + Countdown */}
-        {(formattedDate || data.eventTime) && (
-          <section className={styles.dateSection}>
-            <div className={styles.dateDivider}>
-              <span>Save The Date</span>
-            </div>
-            <div className={styles.dateDisplay}>
-              {formattedDate && (
-                <p className={styles.dateText}>{formattedDate}</p>
-              )}
-              {data.eventTime && (
-                <p className={styles.timeText}>{data.eventTime}</p>
-              )}
-            </div>
-            {data.eventDate && (
-              <div className={styles.countdown}>
-                <p className={styles.countdownLabel}>Until Big Day</p>
-                <div className={styles.countdownRow}>
-                  <div className={styles.countdownUnit}>
-                    <span className={styles.countdownNum}>
-                      {countdown.days}
-                    </span>
-                    <span className={styles.countdownText}>Days</span>
-                  </div>
-                  <div className={styles.countdownUnit}>
-                    <span className={styles.countdownNum}>
-                      {countdown.hours}
-                    </span>
-                    <span className={styles.countdownText}>Hours</span>
-                  </div>
-                  <div className={styles.countdownUnit}>
-                    <span className={styles.countdownNum}>
-                      {countdown.minutes}
-                    </span>
-                    <span className={styles.countdownText}>Minutes</span>
-                  </div>
-                  <div className={styles.countdownUnit}>
-                    <span
-                      className={`${styles.countdownNum} ${styles.countdownSec}`}
-                    >
-                      {countdown.seconds}
-                    </span>
-                    <span className={styles.countdownText}>Seconds</span>
-                  </div>
-                </div>
+        <section className={styles.dateSection}>
+          <div className={styles.dateDivider}>
+            <span>Save The Date</span>
+          </div>
+          <div className={styles.dateDisplay}>
+            <p className={styles.dateText}>{formattedDate}</p>
+            <p className={styles.timeText}>{EVENT_TIME}</p>
+          </div>
+          <div className={styles.countdown}>
+            <p className={styles.countdownLabel}>Until Big Day</p>
+            <div className={styles.countdownRow}>
+              <div className={styles.countdownUnit}>
+                <span className={styles.countdownNum}>{countdown.days}</span>
+                <span className={styles.countdownText}>Days</span>
               </div>
-            )}
-          </section>
-        )}
+              <div className={styles.countdownUnit}>
+                <span className={styles.countdownNum}>{countdown.hours}</span>
+                <span className={styles.countdownText}>Hours</span>
+              </div>
+              <div className={styles.countdownUnit}>
+                <span className={styles.countdownNum}>{countdown.minutes}</span>
+                <span className={styles.countdownText}>Minutes</span>
+              </div>
+              <div className={styles.countdownUnit}>
+                <span className={`${styles.countdownNum} ${styles.countdownSec}`}>
+                  {countdown.seconds}
+                </span>
+                <span className={styles.countdownText}>Seconds</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Details Image */}
         <section className={styles.detailsImgSection}>
