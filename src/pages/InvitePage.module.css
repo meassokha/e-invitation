@@ -3,8 +3,15 @@
   margin: 0 auto;
   background: #fff;
   min-height: 100vh;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-image: url("/images/background.jpg");
+  background-repeat: repeat; /* Allows the texture to tile */
+  background-position: top center;
+  background-attachment: fixed; /* Optional: keeps background static while scrolling */
 }
 
 /* Tap-to-play music button (shown when autoplay is blocked) */
@@ -19,13 +26,15 @@
   border-radius: 24px;
   padding: 10px 18px;
   font-size: 13px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   letter-spacing: 0.5px;
   cursor: pointer;
   backdrop-filter: blur(6px);
   transition: background 0.2s;
 }
-.musicPlayBtn:hover { background: rgba(92, 61, 46, 0.92); }
+.musicPlayBtn:hover {
+  background: rgba(92, 61, 46, 0.92);
+}
 
 /* ── Cover ── */
 .cover {
@@ -47,6 +56,14 @@
   object-fit: cover;
 }
 
+.footerImg {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  padding: 0, 0, 0;
+  margin: 0 auto;
+}
+
 .coverPlaceholder {
   position: absolute;
   inset: 0;
@@ -56,7 +73,7 @@
   background: linear-gradient(135deg, #2c2420 0%, #5c3d2e 100%);
   color: #d4af8a;
   font-size: 20px;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 
 /* Guest Name Label – top/left set via inline style from setup page drag */
@@ -65,10 +82,10 @@
   top: 18%;
   left: 50%;
   transform: translateX(-50%);
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(18px, 5vw, 28px);
   color: var(--guest-color, #fff);
-  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
   letter-spacing: 1px;
   white-space: nowrap;
   z-index: 2;
@@ -79,32 +96,36 @@
   position: absolute;
   z-index: 2;
   transform: translateX(-50%);
-  background: rgba(255,255,255,0.15);
-  border: 2px solid rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.7);
   color: #fff;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 14px;
   letter-spacing: 4px;
   padding: 14px 40px;
   cursor: pointer;
   backdrop-filter: blur(6px);
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   white-space: nowrap;
 }
 .openBtn:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
   border-color: #fff;
 }
 
 /* ── Body ── */
-.body { background: #faf9f7; }
+.body {
+  background: #faf9f7;
+}
 
 .titleSection {
   text-align: center;
   padding: 52px 24px 32px;
 }
 .eventTitle {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(24px, 6vw, 36px);
   color: #2c2420;
   line-height: 1.3;
@@ -131,7 +152,24 @@
   cursor: pointer;
   transition: opacity 0.15s;
 }
-.couplePhoto:hover { opacity: 0.88; }
+.couplePhoto:hover {
+  opacity: 0.88;
+}
+
+/* Extra Couple Photos – gallery 2 */
+.photos2Section {
+  padding: 16px 16px 32px;
+}
+.photos2Grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+}
+.photos2Grid > :nth-child(3),
+.photos2Grid > :nth-child(6) {
+  grid-column: 1 / -1;
+  aspect-ratio: 16/9;
+}
 
 /* ── Lightbox ── */
 .lightboxOverlay {
@@ -164,7 +202,9 @@
   line-height: 1;
   padding: 4px 8px;
 }
-.lightboxClose:hover { opacity: 1; }
+.lightboxClose:hover {
+  opacity: 1;
+}
 .lightboxPrev,
 .lightboxNext {
   position: absolute;
@@ -179,12 +219,21 @@
   padding: 16px 14px;
   border-radius: 4px;
   opacity: 0.75;
-  transition: opacity 0.15s, background 0.15s;
+  transition:
+    opacity 0.15s,
+    background 0.15s;
 }
 .lightboxPrev:hover,
-.lightboxNext:hover { opacity: 1; background: rgba(255, 255, 255, 0.22); }
-.lightboxPrev { left: 8px; }
-.lightboxNext { right: 8px; }
+.lightboxNext:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.22);
+}
+.lightboxPrev {
+  left: 8px;
+}
+.lightboxNext {
+  right: 8px;
+}
 .lightboxDots {
   position: absolute;
   bottom: 18px;
@@ -201,17 +250,24 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-.lightboxDotActive { background: #fff; }
+.lightboxDotActive {
+  background: #fff;
+}
 
 /* Body Design 1 */
-.fullWidthImg { line-height: 0; }
-.fullWidthImg img { width: 100%; display: block; }
+.fullWidthImg {
+  line-height: 0;
+}
+.fullWidthImg img {
+  width: 100%;
+  display: block;
+}
 
 /* Date */
 .dateSection {
   padding: 48px 24px;
   text-align: center;
-  background: #fff;
+  background-image: url("images/date-bg.png");
 }
 .dateDivider {
   display: flex;
@@ -225,34 +281,33 @@
 }
 .dateDivider::before,
 .dateDivider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: #d4af8a;
 }
 .dateText {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(18px, 4vw, 24px);
-  color: #2c2420;
+  color: #607257;
   margin-bottom: 8px;
 }
 .timeText {
   font-size: 20px;
-  color: #b8864e;
+  color: #607257;
   letter-spacing: 2px;
   font-weight: 300;
 }
 
 /* Countdown */
 .countdown {
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid #ece8e2;
+  margin-top: 12px;
+  padding-top: 14px;
 }
 .countdownLabel {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 13px;
-  color: #b8864e;
+  color: #607257;
   letter-spacing: 3px;
   text-transform: uppercase;
   margin-bottom: 16px;
@@ -269,7 +324,7 @@
   gap: 4px;
 }
 .countdownNum {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(28px, 7vw, 38px);
   font-weight: 700;
   color: #2c2420;
@@ -325,9 +380,11 @@
   background: #2c2420;
   overflow: hidden;
 }
-.agendaContent { position: relative; }
+.agendaContent {
+  position: relative;
+}
 .agendaTitle {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   color: #d4af8a;
   font-size: 22px;
   text-align: center;
@@ -346,17 +403,17 @@
   font-size: 15px;
   padding: 10px 16px;
   border-left: 3px solid #d4af8a;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Location */
 .locationSection {
-  padding: 48px 24px;
+  padding: 14px 24px;
   text-align: center;
-  background: #fff;
+  background: transparent;
 }
 .sectionTitle {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 22px;
   color: #2c2420;
   margin-bottom: 12px;
@@ -395,50 +452,104 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  padding: 12px 16px;
 }
-.qrLabel { font-size: 13px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
-.qrImg { width: 160px; height: 160px; object-fit: contain; }
+.qrLabel {
+  font-size: 13px;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.qrImg {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
 
 /* Footer */
 .footer {
-  background: #2c2420;
   color: #c4b09a;
   text-align: center;
   padding: 32px 24px;
   font-size: 14px;
   font-style: italic;
   letter-spacing: 0.5px;
+  background: transparent;
 }
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
-  .titleSection { padding: 36px 20px 24px; }
+  .titleSection {
+    padding: 36px 20px 24px;
+  }
 
-  .dateSection { padding: 36px 16px; }
+  .dateSection {
+    padding: 36px 16px;
+  }
 
-  .countdownRow { gap: 12px; }
-  .countdownNum { font-size: clamp(22px, 8vw, 32px); }
-  .countdownText { font-size: 9px; letter-spacing: 1px; }
+  .countdownRow {
+    gap: 12px;
+  }
+  .countdownNum {
+    font-size: clamp(22px, 8vw, 32px);
+  }
+  .countdownText {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
 
-  .detailsSection { padding: 36px 20px; }
-  .detailsText { font-size: 15px; }
+  .detailsSection {
+    padding: 36px 20px;
+  }
+  .detailsText {
+    font-size: 15px;
+  }
 
-  .agendaSection { padding: 36px 20px; }
-  .agendaList li { font-size: 14px; padding: 8px 12px; }
-  .detailsTextSection { padding: 28px 20px; }
+  .agendaSection {
+    padding: 36px 20px;
+  }
+  .agendaList li {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+  .detailsTextSection {
+    padding: 28px 20px;
+  }
 
-  .locationSection { padding: 36px 16px; }
-  .mapEmbed { height: 220px; }
-  .qrImg { width: 140px; height: 140px; }
+  .locationSection {
+    padding: 36px 16px;
+  }
+  .mapEmbed {
+    height: 220px;
+  }
+  .qrImg {
+    width: 140px;
+    height: 140px;
+  }
 
-  .openBtn { padding: 12px 28px; font-size: 12px; letter-spacing: 3px; }
+  .openBtn {
+    padding: 12px 28px;
+    font-size: 12px;
+    letter-spacing: 3px;
+  }
 
-  .photosSection { padding: 0 8px 24px; }
+  .photosSection {
+    padding: 0 8px 24px;
+  }
 }
 
 @media (max-width: 360px) {
-  .dateDivider { font-size: 10px; gap: 10px; }
-  .countdownRow { gap: 8px; }
-  .countdownUnit { min-width: 48px; }
-  .agendaList { gap: 8px; }
+  .dateDivider {
+    font-size: 10px;
+    gap: 10px;
+  }
+  .countdownRow {
+    gap: 8px;
+  }
+  .countdownUnit {
+    min-width: 48px;
+  }
+  .agendaList {
+    gap: 8px;
+  }
 }

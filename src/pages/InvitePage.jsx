@@ -39,6 +39,7 @@ export default function InvitePage() {
   const audioRef = useRef()
   const [audioBlocked, setAudioBlocked] = useState(false)
   const [lightbox, setLightbox] = useState(null) // null = closed, 0/1/2 = photo index
+  const [lightbox2, setLightbox2] = useState(null) // second gallery (couple4-9)
 
   const tryPlay = () => {
     if (!audioRef.current) return
@@ -158,7 +159,7 @@ export default function InvitePage() {
         {/* Event Title */}
         {data.eventTitle && (
           <section className={styles.titleSection}>
-            <h1 className={styles.eventTitle}>{data.eventTitle}</h1>
+            <h1 className={styles.eventTitle}>Siek Leaksmy & Hour Laby</h1>
           </section>
         )}
 
@@ -259,6 +260,34 @@ export default function InvitePage() {
           />
         </section>
 
+        {/* Extra Couple Photos – 2 small / 1 big / 2 small / 1 big */}
+        {(() => {
+          const photos2 = [
+            "/images/couple4.jpg",
+            "/images/couple5.jpg",
+            "/images/couple6.jpg",
+            "/images/couple7.jpg",
+            "/images/couple8.jpg",
+            "/images/couple9.jpg",
+          ]
+          return (
+            <section className={styles.photos2Section}>
+              <div className={styles.photos2Grid}>
+                {photos2.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`couple ${i + 4}`}
+                    className={styles.couplePhoto}
+                    onError={onImgError}
+                    onClick={() => setLightbox2(i)}
+                  />
+                ))}
+              </div>
+            </section>
+          )
+        })()}
+
         {/* Venue */}
         <section className={styles.locationSection}>
           <h2 className={styles.sectionTitle}>Venue</h2>
@@ -297,50 +326,149 @@ export default function InvitePage() {
           </div>
         </section>
 
-        {/* RSVP */}
+        {/* RSVP 
         <RSVPSection guestName={guestName} />
+        */}
 
         {/* Footer */}
         {data.footerText && (
           <footer className={styles.footer}>
-            <p>{data.footerText}</p>
+            <img
+              src={"/images/footer-img.jpg"}
+              alt="footer design"
+              className={styles.footerImg}
+              onError={onImgError}
+            />
           </footer>
         )}
       </div>
 
-      {/* Lightbox */}
-      {lightbox !== null && (() => {
-        const photos = [
-          data.images?.couple1 || "/images/couple1.jpg",
-          data.images?.couple2 || "/images/couple2.jpg",
-          data.images?.couple3 || "/images/couple3.jpg",
-        ]
-        const prev = () => setLightbox((lightbox + 2) % photos.length)
-        const next = () => setLightbox((lightbox + 1) % photos.length)
-        return (
-          <div className={styles.lightboxOverlay} onClick={() => setLightbox(null)}>
-            <button className={styles.lightboxClose} onClick={() => setLightbox(null)}>✕</button>
-            <button className={styles.lightboxPrev} onClick={(e) => { e.stopPropagation(); prev() }}>‹</button>
-            <img
-              className={styles.lightboxImg}
-              src={photos[lightbox]}
-              alt={`couple ${lightbox + 1}`}
-              onClick={(e) => e.stopPropagation()}
-              onError={onImgError}
-            />
-            <button className={styles.lightboxNext} onClick={(e) => { e.stopPropagation(); next() }}>›</button>
-            <div className={styles.lightboxDots}>
-              {photos.map((_, i) => (
-                <span
-                  key={i}
-                  className={`${styles.lightboxDot} ${i === lightbox ? styles.lightboxDotActive : ''}`}
-                  onClick={(e) => { e.stopPropagation(); setLightbox(i) }}
-                />
-              ))}
+      {/* Lightbox – gallery 1 */}
+      {lightbox !== null &&
+        (() => {
+          const photos = [
+            data.images?.couple1 || "/images/couple1.jpg",
+            data.images?.couple2 || "/images/couple2.jpg",
+            data.images?.couple3 || "/images/couple3.jpg",
+          ]
+          const prev = () => setLightbox((lightbox + 2) % photos.length)
+          const next = () => setLightbox((lightbox + 1) % photos.length)
+          return (
+            <div
+              className={styles.lightboxOverlay}
+              onClick={() => setLightbox(null)}
+            >
+              <button
+                className={styles.lightboxClose}
+                onClick={() => setLightbox(null)}
+              >
+                ✕
+              </button>
+              <button
+                className={styles.lightboxPrev}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  prev()
+                }}
+              >
+                ‹
+              </button>
+              <img
+                className={styles.lightboxImg}
+                src={photos[lightbox]}
+                alt={`couple ${lightbox + 1}`}
+                onClick={(e) => e.stopPropagation()}
+                onError={onImgError}
+              />
+              <button
+                className={styles.lightboxNext}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  next()
+                }}
+              >
+                ›
+              </button>
+              <div className={styles.lightboxDots}>
+                {photos.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`${styles.lightboxDot} ${i === lightbox ? styles.lightboxDotActive : ""}`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setLightbox(i)
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        )
-      })()}
+          )
+        })()}
+      {/* Lightbox – gallery 2 */}
+      {lightbox2 !== null &&
+        (() => {
+          const photos2 = [
+            "/images/couple4.jpg",
+            "/images/couple5.jpg",
+            "/images/couple6.jpg",
+            "/images/couple7.jpg",
+            "/images/couple8.jpg",
+            "/images/couple9.jpg",
+          ]
+          const prev = () =>
+            setLightbox2((lightbox2 + photos2.length - 1) % photos2.length)
+          const next = () => setLightbox2((lightbox2 + 1) % photos2.length)
+          return (
+            <div
+              className={styles.lightboxOverlay}
+              onClick={() => setLightbox2(null)}
+            >
+              <button
+                className={styles.lightboxClose}
+                onClick={() => setLightbox2(null)}
+              >
+                ✕
+              </button>
+              <button
+                className={styles.lightboxPrev}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  prev()
+                }}
+              >
+                ‹
+              </button>
+              <img
+                className={styles.lightboxImg}
+                src={photos2[lightbox2]}
+                alt={`couple ${lightbox2 + 4}`}
+                onClick={(e) => e.stopPropagation()}
+                onError={onImgError}
+              />
+              <button
+                className={styles.lightboxNext}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  next()
+                }}
+              >
+                ›
+              </button>
+              <div className={styles.lightboxDots}>
+                {photos2.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`${styles.lightboxDot} ${i === lightbox2 ? styles.lightboxDotActive : ""}`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setLightbox2(i)
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )
+        })()}
     </div>
   )
 }
