@@ -335,7 +335,7 @@ export default function InvitePage() {
           <footer className={styles.footer}>
             <img
               src={"/images/footer-img.jpg"}
-              alt="footer design"
+              alt="footer designed"
               className={styles.footerImg}
               onError={onImgError}
             />
