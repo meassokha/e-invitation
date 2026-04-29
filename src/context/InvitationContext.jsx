@@ -30,7 +30,16 @@ export function InvitationProvider({ children }) {
   const [data, setData] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
-      return saved ? { ...defaultState, ...JSON.parse(saved) } : defaultState
+      if (!saved) return defaultState
+      const parsed = JSON.parse(saved)
+      // Don't let empty saved values override hardcoded defaults
+      const merged = { ...defaultState }
+      for (const key of Object.keys(defaultState)) {
+        if (parsed[key] !== undefined && parsed[key] !== "" && parsed[key] !== null) {
+          merged[key] = parsed[key]
+        }
+      }
+      return merged
     } catch {
       return defaultState
     }
