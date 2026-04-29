@@ -331,16 +331,14 @@ export default function InvitePage() {
         */}
 
         {/* Footer */}
-        {data.footerText && (
-          <footer className={styles.footer}>
-            <img
-              src={"/images/footer-img.jpg"}
-              alt="footer designed"
-              className={styles.footerImg}
-              onError={onImgError}
-            />
-          </footer>
-        )}
+        <footer className={styles.footer}>
+          <img
+            src={"/images/footer-img.jpg"}
+            alt="footer design"
+            className={styles.footerImg}
+            onError={onImgError}
+          />
+        </footer>
       </div>
 
       {/* Lightbox – gallery 1 */}

@@ -267,7 +267,7 @@ body {
 .dateSection {
   padding: 48px 24px;
   text-align: center;
-  background-image: url("images/date-bg.png");
+  background-image: url("/images/date-bg.png");
 }
 .dateDivider {
   display: flex;
