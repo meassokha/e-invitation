@@ -11,9 +11,9 @@ const onImgError = (e) => {
 
 // ── Edit these values to change position / style of guest name & OPEN button ──
 const GUEST_NAME = {
-  top: 83,
+  top: 63,
   left: 50, // position on cover image (%)
-  fontFamily: "'Playfair Display', serif",
+  fontFamily: "'Kaushan Script', serif",
   fontSize: 38, // px
   color: "#ffffff",
   shadowColor: "#000000",
@@ -21,11 +21,11 @@ const GUEST_NAME = {
 }
 
 const OPEN_BTN = {
-  top: 93,
-  left: 50, // position on cover image (%)
+  top: 78,
+  left: 52, // position on cover image (%)
   fontFamily: "'Lato', sans-serif",
-  fontSize: 20, // px
-  color: "#ffffff",
+  fontSize: 40, // px
+  color: "transparent",
   shadowColor: "#000000",
   shadowSize: 0, // px — set to 0 for no shadow
 }
@@ -110,7 +110,7 @@ export default function InvitePage() {
       {/* ── COVER ── */}
       <section className={styles.cover}>
         <img
-          src={data.images?.cover || "/images/cover.jpg"}
+          src={data.images?.cover || "/images/cover.gif"}
           alt="cover"
           className={styles.coverImg}
           onError={onImgError}
