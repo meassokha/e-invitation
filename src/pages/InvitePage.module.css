@@ -38,14 +38,19 @@ body {
 
 /* ── Cover ── */
 .cover {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: min(100%, 640px);
+  transform: translateX(-50%);
+  height: 100vh;
+  z-index: 50;
   overflow: hidden;
   background: #1a1009;
+  transition: top 0.9s cubic-bezier(0.4, 0, 1, 1);
+}
+.coverFlyUp {
+  top: -110vh;
 }
 
 .coverImg {

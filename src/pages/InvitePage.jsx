@@ -40,6 +40,13 @@ export default function InvitePage() {
   const [audioBlocked, setAudioBlocked] = useState(false)
   const [lightbox, setLightbox] = useState(null) // null = closed, 0/1/2 = photo index
   const [lightbox2, setLightbox2] = useState(null) // second gallery (couple4-9)
+  const [opened, setOpened] = useState(false)
+  const [flying, setFlying] = useState(false)
+
+  useEffect(() => {
+    document.body.style.overflow = opened ? "" : "hidden"
+    return () => { document.body.style.overflow = "" }
+  }, [opened])
 
   const tryPlay = () => {
     if (!audioRef.current) return
@@ -49,9 +56,13 @@ export default function InvitePage() {
       .catch(() => setAudioBlocked(true))
   }
 
-  const scrollToBody = () => {
-    bodyRef.current?.scrollIntoView({ behavior: "smooth" })
+  const handleOpen = () => {
+    setFlying(true)
     tryPlay()
+    setTimeout(() => {
+      setOpened(true)
+      window.scrollTo({ top: 0, behavior: "instant" })
+    }, 900)
   }
 
   // ── Edit these to change the event date, time, and song ──────────────────
@@ -108,61 +119,56 @@ export default function InvitePage() {
       )}
 
       {/* ── COVER ── */}
-      <section className={styles.cover}>
-        <img
-          src={data.images?.cover || "/images/cover.gif"}
-          alt="cover"
-          className={styles.coverImg}
-          onError={onImgError}
-        />
+      {!opened && (
+        <section className={`${styles.cover} ${flying ? styles.coverFlyUp : ""}`}>
+          <img
+            src={data.images?.cover || "/images/cover.gif"}
+            alt="cover"
+            className={styles.coverImg}
+            onError={onImgError}
+          />
 
-        {guestName && (
-          <div
-            className={styles.guestLabel}
+          {guestName && (
+            <div
+              className={styles.guestLabel}
+              style={{
+                top: `${GUEST_NAME.top}%`,
+                left: `${GUEST_NAME.left}%`,
+                fontFamily: GUEST_NAME.fontFamily,
+                fontSize: `${GUEST_NAME.fontSize}px`,
+                color: GUEST_NAME.color,
+                textShadow:
+                  GUEST_NAME.shadowSize > 0
+                    ? `0 1px ${GUEST_NAME.shadowSize}px ${GUEST_NAME.shadowColor}`
+                    : "none",
+              }}
+            >
+              {guestName}
+            </div>
+          )}
+
+          <button
+            className={styles.openBtn}
+            onClick={handleOpen}
             style={{
-              top: `${GUEST_NAME.top}%`,
-              left: `${GUEST_NAME.left}%`,
-              fontFamily: GUEST_NAME.fontFamily,
-              fontSize: `${GUEST_NAME.fontSize}px`,
-              color: GUEST_NAME.color,
+              top: `${OPEN_BTN.top}%`,
+              left: `${OPEN_BTN.left}%`,
+              fontFamily: OPEN_BTN.fontFamily,
+              fontSize: `${OPEN_BTN.fontSize}px`,
+              color: OPEN_BTN.color,
               textShadow:
-                GUEST_NAME.shadowSize > 0
-                  ? `0 1px ${GUEST_NAME.shadowSize}px ${GUEST_NAME.shadowColor}`
+                OPEN_BTN.shadowSize > 0
+                  ? `0 1px ${OPEN_BTN.shadowSize}px ${OPEN_BTN.shadowColor}`
                   : "none",
             }}
           >
-            {guestName}
-          </div>
-        )}
-
-        <button
-          className={styles.openBtn}
-          onClick={scrollToBody}
-          style={{
-            top: `${OPEN_BTN.top}%`,
-            left: `${OPEN_BTN.left}%`,
-            fontFamily: OPEN_BTN.fontFamily,
-            fontSize: `${OPEN_BTN.fontSize}px`,
-            color: OPEN_BTN.color,
-            textShadow:
-              OPEN_BTN.shadowSize > 0
-                ? `0 1px ${OPEN_BTN.shadowSize}px ${OPEN_BTN.shadowColor}`
-                : "none",
-          }}
-        >
-          OPEN
-        </button>
-      </section>
+            OPEN
+          </button>
+        </section>
+      )}
 
       {/* ── BODY ── */}
       <div ref={bodyRef} className={styles.body}>
-        {/* Event Title */}
-        {data.eventTitle && (
-          <section className={styles.titleSection}>
-            <h1 className={styles.eventTitle}>Siek Leaksmy & Hour Laby</h1>
-          </section>
-        )}
-
         {/* ── COVER 2 ── */}
         <section className={styles.cover2}>
           <img
@@ -172,6 +178,13 @@ export default function InvitePage() {
             onError={onImgError}
           />
         </section>
+
+        {/* Event Title */}
+        {data.eventTitle && (
+          <section className={styles.titleSection}>
+            <h1 className={styles.eventTitle}>Siek Leaksmy & Hour Laby</h1>
+          </section>
+        )}
 
         {/* Couple Photos */}
         {(() => {
