@@ -163,6 +163,16 @@ export default function InvitePage() {
           </section>
         )}
 
+        {/* ── COVER 2 ── */}
+        <section className={styles.cover2}>
+          <img
+            src="/images/cover2.gif"
+            alt="cover 2"
+            className={styles.cover2Img}
+            onError={onImgError}
+          />
+        </section>
+
         {/* Couple Photos */}
         {(() => {
           const photos = [

@@ -111,6 +111,16 @@ body {
   border-radius: 50%;
 }
 
+/* ── Cover 2 ── */
+.cover2 {
+  width: 100%;
+  line-height: 0;
+}
+.cover2Img {
+  width: 100%;
+  display: block;
+}
+
 /* ── Body ── */
 .body {
   background: #faf9f7;
@@ -147,6 +157,7 @@ body {
   border-radius: 4px;
   cursor: pointer;
   transition: opacity 0.15s;
+  padding: 20px;
 }
 .couplePhoto:hover {
   opacity: 0.88;
