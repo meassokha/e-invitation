@@ -48,6 +48,38 @@ export default function InvitePage() {
     return () => { document.body.style.overflow = "" }
   }, [opened])
 
+  useEffect(() => {
+    if (!opened) return
+
+    const SPEED = 0.6 // px per frame
+    let animId
+
+    const stop = () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener("wheel", stop)
+      window.removeEventListener("touchstart", stop)
+      window.removeEventListener("mousedown", stop)
+      window.removeEventListener("keydown", stop)
+    }
+
+    window.addEventListener("wheel", stop, { once: true })
+    window.addEventListener("touchstart", stop, { once: true })
+    window.addEventListener("mousedown", stop, { once: true })
+    window.addEventListener("keydown", stop, { once: true })
+
+    const tick = () => {
+      if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+        stop()
+        return
+      }
+      window.scrollBy(0, SPEED)
+      animId = requestAnimationFrame(tick)
+    }
+
+    animId = requestAnimationFrame(tick)
+    return stop
+  }, [opened])
+
   const tryPlay = () => {
     if (!audioRef.current) return
     audioRef.current
@@ -59,10 +91,7 @@ export default function InvitePage() {
   const handleOpen = () => {
     setFlying(true)
     tryPlay()
-    setTimeout(() => {
-      setOpened(true)
-      window.scrollTo({ top: 0, behavior: "instant" })
-    }, 900)
+    setTimeout(() => setOpened(true), 900)
   }
 
   // ── Edit these to change the event date, time, and song ──────────────────
