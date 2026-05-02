@@ -11,10 +11,10 @@ const onImgError = (e) => {
 
 // ── Edit these values to change position / style of guest name & OPEN button ──
 const GUEST_NAME = {
-  top: 63,
+  top: 64,
   left: 50, // position on cover image (%)
   fontFamily: "'Kaushan Script', serif",
-  fontSize: 38, // px
+  fontSize: 24, // px
   color: "#ffffff",
   shadowColor: "#000000",
   shadowSize: 6, // px — set to 0 for no shadow
@@ -45,7 +45,9 @@ export default function InvitePage() {
 
   useEffect(() => {
     document.body.style.overflow = opened ? "" : "hidden"
-    return () => { document.body.style.overflow = "" }
+    return () => {
+      document.body.style.overflow = ""
+    }
   }, [opened])
 
   useEffect(() => {
@@ -149,7 +151,9 @@ export default function InvitePage() {
 
       {/* ── COVER ── */}
       {!opened && (
-        <section className={`${styles.cover} ${flying ? styles.coverFlyUp : ""}`}>
+        <section
+          className={`${styles.cover} ${flying ? styles.coverFlyUp : ""}`}
+        >
           <img
             src={data.images?.cover || "/images/cover.gif"}
             alt="cover"
