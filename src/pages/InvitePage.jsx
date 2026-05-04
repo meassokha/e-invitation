@@ -395,6 +395,13 @@ export default function InvitePage() {
             onError={onImgError}
           />
         </footer>
+
+        {/* Footer 2 */}
+        <div className={styles.footer2Divider} />
+        <footer className={styles.footer2}>
+          <p>Power by: Sokha Digital Solution - SDS</p>
+          <p>Telegram 012252564</p>
+        </footer>
       </div>
 
       {/* Lightbox – gallery 1 */}

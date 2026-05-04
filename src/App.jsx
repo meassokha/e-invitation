@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { InvitationProvider } from './context/InvitationContext';
-import SetupPage from './pages/SetupPage';
-import InvitePage from './pages/InvitePage';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { InvitationProvider } from "./context/InvitationContext"
+import SetupPage from "./pages/SetupPage"
+import InvitePage from "./pages/InvitePage"
 
 export default function App() {
   return (
@@ -10,9 +10,9 @@ export default function App() {
         <Routes>
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/invite" element={<InvitePage />} />
-          <Route path="*" element={<Navigate to="/setup" replace />} />
+          <Route path="*" element={<Navigate to="/invite" replace />} />
         </Routes>
       </BrowserRouter>
     </InvitationProvider>
-  );
+  )
 }

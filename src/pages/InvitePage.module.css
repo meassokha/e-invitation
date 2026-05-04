@@ -498,6 +498,27 @@ body {
   background: transparent;
 }
 
+/* Footer 2 */
+.footer2Divider {
+  width: 60%;
+  margin: 0 auto;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c4b09a, transparent);
+}
+
+.footer2 {
+  text-align: center;
+  padding: 12px 24px 24px;
+  font-size: 12px;
+  color: #a89080;
+  letter-spacing: 0.4px;
+  background: transparent;
+}
+
+.footer2 p {
+  margin: 2px 0;
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .titleSection {
