@@ -399,8 +399,8 @@ export default function InvitePage() {
         {/* Footer 2 */}
         <div className={styles.footer2Divider} />
         <footer className={styles.footer2}>
-          <p>Power by: Sokha Digital Solution - SDS</p>
-          <p>Telegram 012252564</p>
+          <p>Powered by: Sokha Digital Solution - SDS</p>
+          <a href="https://t.me/sokha_meas">Telegram: 012 252 564</a>
         </footer>
       </div>
 
